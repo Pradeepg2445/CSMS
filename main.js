@@ -130,15 +130,15 @@ csmsFunctional.consoleMessage("warning",err.message) ;
           db.run(`UPDATE  CSMS_DETAILS SET "KEY"="AUTHOR", "VALUE"="PRADEEP G" WHERE id=3`)
           db.run(`UPDATE  CSMS_DETAILS SET "KEY"="AUTHOR_PROFILE", "VALUE"="https://github.com/Pradeepg2445" WHERE id=4`)
           db.run(`UPDATE  CSMS_DETAILS SET "KEY"="LICENSE", "VALUE"="MIT" WHERE id=5`)
-          db.run(`UPDATE  CSMS_DETAILS SET "KEY"="APP_VERSION", "VALUE"="1.0.0" WHERE id=6`)
-          db.run(`UPDATE  CSMS_DETAILS SET "KEY"="DB_VERSION", "VALUE"="1.0.0" WHERE id=7`)
+          db.run(`UPDATE  CSMS_DETAILS SET "KEY"="APP_VERSION", "VALUE"="v1.0.0" WHERE id=6`)
+          db.run(`UPDATE  CSMS_DETAILS SET "KEY"="DB_VERSION", "VALUE"="v1.0.0" WHERE id=7`)
           db.run(`UPDATE  CSMS_DETAILS SET "KEY"="SECRETKEY_NO", "VALUE"="1" WHERE id=8`)
           db.run(`UPDATE  CSMS_DETAILS SET "KEY"="DATABASE", "VALUE"="sqlite3" WHERE id=9`)
               
 csmsFunctional.consoleMessage("message","Updating application info")
         }else{
           db.run(`INSERT INTO CSMS_DETAILS("KEY","VALUE") VALUES("NAME","CSMS"),("DESCRIPTION","Combined Student Management System"),("AUTHOR","PRADEEP G"),
-          ("AUTHOR_PROFILE","https://github.com/Pradeepg2445"),("LICENSE","MIT"),("APP_VERSION","1.0.0"),("DB_VERSION","1.0.0"),("SECRETKEY_NO","1"),("DATABASE","sqlite3")`)
+          ("AUTHOR_PROFILE","https://github.com/Pradeepg2445"),("LICENSE","MIT"),("APP_VERSION","v1.0.0"),("DB_VERSION","v1.0.0"),("SECRETKEY_NO","1"),("DATABASE","sqlite3")`)
           csmsFunctional.consoleMessage("message","Inserting application info")   
         }
         // rows.forEach((row) => {

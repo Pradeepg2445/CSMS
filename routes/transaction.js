@@ -1,7 +1,7 @@
 const {  app, ipcMain, dialog, session } = require("electron"); 
 const path = require("path"); 
 const fs = require('fs'); 
-let dbFile = path.join(app.getAppPath(), 'resources', 'app','db', 'csms.db')
+//let dbFile = path.join(app.getAppPath(), 'resources', 'app','db', 'csms.db')
 const csmsFunctional = require("../csms_utilities/functional");
 const usrModel = require("../model/user");
 const bokModel = require("../model/book");

@@ -1,9 +1,13 @@
+const {  app } = require("electron"); 
 const sqlite3 = require("sqlite3");
 //const path = require('path')
-// let dbFile = path.join(app.getAppPath(), 'db', 'csms.db')
+ //let dbFile = path.join(app.getAppPath(), 'db', 'csms.db')
+ 
+const path = require('path') 
+let dbFile = path.join(app.getAppPath(), 'resources', 'app','db', 'csms.db')
 
   let db = new sqlite3.Database(
-    "./resources/app/db/csms.db",
+    dbFile,
     sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
     (err) => {
       if (err) {
