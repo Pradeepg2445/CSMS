@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Receive Book - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='../node_modules/datatables/media/css/jquery.dataTables.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Receive Book
+          <div class="float-end">
+            <select class="onTopSelect" id="recType" onchange="loadUI()">
+              <option value="R">Roll No</option>
+              <option value="C">Child Id</option>
+            </select> 
+
+            <input list="idList" class="onTopSelect" id="idValue" placeholder="Enter the roll number" onkeydown="clearTop()" onkeypress="loadIdList()">
+           <datalist  class="onTopSelect"  id="idList">
+           </datalist>
+
+            <button class="btn btn-primary btn-sm" onclick="loadData()"><i class="fa fa-filter" aria-hidden="true"></i>
+              Load</button> 
+          </div>
+        </h3>
+        <hr>
+        <center>
+          
+          <div class="row" style="width:99.9%" >
+            <div class="col-md-12" >
+              <div class="shadow-sm p-3 mb-1 bg-white rounded  " >
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row"  style="text-align: left"> 
+                      <div class="col-sm-12 " id="leftData"><b>Student Name</b> : -
+                      </div> 
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row" style="text-align: left"> 
+                      <div class="col-sm-12 " id="rightData"><b>Class</b> : -
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<hr>
+
+          <div style="width: 99%;">
+            <table id="masterBookData" class="cell-border hover">
+              <thead>
+                <tr>
+                  <th style="width:50px;">S.No</th>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th style="width:100px;">From</th>
+                  <th style="width:100px;">To</th>
+                  <th>Log Remark</th> 
+                  <th style="width:90px;">Receive</th>
+                </tr>
+              </thead>
+              <tbody id="showTableData">
+              </tbody>
+
+            </table>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>
+
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  require('../node_modules/datatables/media/js/jquery.dataTables.min.js')(window, $)
+</script>
+
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel()) 
+    $('#masterBookData').dataTable({ "pageLength": 20 });
+    $(".loading").fadeOut("slow");
+  })
+
+  function clearTop(){
+    $("#showTableData").html("")
+    let recType=$("#recType").val();
+    if(recType==="R"){
+    $("#idValue").attr("placeholder","Enter the roll number")
+    $("#leftData").html("<b>Student Name</b> : -")
+    $("#rightData").html("<b>Class</b> : -")
+    } else if(recType==="C"){
+    $("#idValue").attr("placeholder","Enter the child book id")
+    $("#leftData").html("<b>Book Name</b> : -")
+    $("#rightData").html("<b>Author</b> : -")
+    } }
+
+  async function loadIdList(){    clearTop(); 
+    let recType=$("#recType").val(), idValue=$("#idValue").val(), data;  if(isEmpty(idValue)) return;    
+    if(recType==="R") data = await ipcRenderer.sendSync('student', { action: "listRollNumber",rollNumber:idValue }) 
+    else data = await ipcRenderer.sendSync('book', { action: "listChlbkId", chlbkId:idValue })
+    let options=[], values=data.data;
+    if(values.length==0){ $("#showTableData").html("");   $("#idValue").val(""); $("#idValue").attr("disabled",true);  }
+    else{
+    $("#idValue").attr("disabled",false) 
+    for(var i=0;i<values.length;i++){ 
+    let s=(recType==="R")?values[i].ROLL_NO : values[i].CHLBK_ID
+    options.push(`<option value="`+s+`">`+s+`</option>`)
+    } }$("#idList").html(options);  }
+
+
+function loadUI(){ clearTop();  $("#idValue").val("");  $("#idValue").attr("disabled",false); $("#showTableData").html("")  }
+
+
+ 
+
+  async function loadData() { 
+    let recType=$("#recType").val();
+    let idValue=$("#idValue").val();
+    if(isEmpty(idValue)) return;
+
+    let data = await ipcRenderer.sendSync('transaction', { action: "reciveLog",data:{idValue:idValue, recType:recType, }})
+    
+    const rows = data.data;
+    if(recType==="R"){
+      
+    $("#leftData").html("<b>Student Name</b> : "+rows[0].TOPNAME)
+    $("#rightData").html("<b>Class</b> : "+(((rows[0].COURSE==="B")?"BSc CS ":"MSc CS ")+rows[0].BATCH))
+    } else{
+    $("#leftData").html("<b>Book Name</b> : "+rows[0].TOPNAME)
+    $("#rightData").html("<b>Author</b> : "+rows[0].AUTHOR)
+    }
+    let html = ``; 
+    for (var i = 0; i < rows.length; i++) {
+      console.log(rows[i].GIVEN_ON)
+      let actionHtml=(rows[i].GIVEN_ON ==="" || rows[i].GIVEN_ON ===null || rows[i].GIVEN_ON ===undefined)?
+    (`<button class="btn btn-success btn-sm" onclick="receiveBook(`+ rows[i].TRANS_ID+`, '`+ rows[i].CHLBK_ID + `', '`+ rows[i].ROLL_NO + `' )">&ensp;<i class="fa fa-cloud-download" aria-hidden="true"></i>&ensp;</button>
+   `):("<span style='color:green;font-size:12px;font-weight:bold;'>"+ rows[i].GIVEN_ON +" </span>")
+      html += `
+      <tr> 
+      <td>`+(i+1) + `</td>
+      <td>`+ ((recType==="R")?rows[i].CHLBK_ID : rows[i].ROLL_NO ) + `</td>
+      <td>`+ rows[i].NAME + `</td>
+      <td>`+ rows[i].FROM_DATE + `</td>
+      <td>`+ rows[i].TO_DATE + `</td>
+      <td>`+ rows[i].REMARKS + `</td> 
+      <td><center> `+actionHtml+` </center></td>
+      </tr>\n`; 
+    }
+    
+    if(rows.length==0) $("#showTableData").html("")
+    else $("#showTableData").html(html) 
+  }
+
+
+
+  async function receiveBook(transId,chlbkId, rollNumber){
+    if(isEmpty(transId) || isEmpty(chlbkId) || isEmpty(rollNumber)) {
+      await showAlert("Alert!","Something went wrong!" )  
+      return;
+    }
+    let a = await showConfirm("Alert!", "Do you want to receive this book?")
+    if (parseInt(a.data) === 0) {
+      let b= await ipcRenderer.sendSync('transaction', { action: "receiveBook", data:{transId,chlbkId,rollNumber }})
+      if(b.data===1){
+    await showAlert("Alert!","Successfully book ("+chlbkId+") received from "+rollNumber+"." )  
+    loadData();
+      }else{
+    await showAlert("Alert!","Something went wrong!" )  
+    loadData();
+      }
+    }
+  }
+ 
+
+</script>
+
+</html>

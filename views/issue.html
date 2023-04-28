@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Issue Book - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Issue Book
+        </h3>
+        <hr>
+        <div style="width: 99.6%;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="shadow-sm p-3 mb-5 bg-white rounded ">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Name</label>
+                  <div class="col-sm-9 studentName">-</div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Class</label>
+                  <div class="col-sm-9 studentClass">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Mobile</label>
+                  <div class="col-sm-9 mobile">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Status</label>
+                  <div class="col-sm-9 studentStatus">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3  mb-1 col-form-label">Defaulter</label>
+                  <div class="col-sm-9 studentIsDefaulter">- </div>
+                </div>  
+                <div class="form-group row ">
+                  <div class="col-sm-9">
+                    <input type="text" list="rollNumberList"   class="form-control" maxlength="25" id="rollNumber"
+                      style="text-transform: uppercase;" placeholder="Enter the roll number" onkeydown="clearStudent()" onkeypress="listRollNumber()">
+                      <datalist  class="onTopSelect"  id="rollNumberList">
+                      </datalist>
+                  </div>
+                  <button class="col-sm-1 btn btn-primary" onclick="loadStudent()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+              <div class="shadow-sm p-3 mb-5 bg-white rounded  ">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Book Name</label>
+                  <div class="col-sm-9 bookName">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Author</label>
+                  <div class="col-sm-9 author">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Price</label>
+                  <div class="col-sm-9 price">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Status</label>
+                  <div class="col-sm-9 bookStatus">- </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3  mb-1 col-form-label">Remarks</label>
+                  <div class="col-sm-9 bookRemarks">- </div>
+                </div> 
+                <div class="form-group row ">
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" maxlength="20" id="chlbkId"
+                      style="text-transform: uppercase;" list="chlbkIdList" placeholder="Enter the child book id" onkeydown="clearBook()" onkeypress="listChildBookId()">
+                      <datalist  class="onTopSelect"  id="chlbkIdList">
+                      </datalist>
+                  </div>
+                  <button class="col-sm-1 btn btn-primary" onclick="loadBook()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+              </div>
+            </div>
+
+
+<center>
+            <div class="row" >
+              <div class="col-md-12" >
+                <div class="shadow-sm p-3 mb-5 bg-white rounded  " >
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group row">
+                        <label class="col-sm-3 mb-1 col-form-label">From Date</label>
+                        <div class="col-sm-9 ">
+                          <input type="date" class="form-control" id="fromDate"
+                            placeholder="Enter the child book number">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 mb-2 col-form-label">To Date</label>
+                        <div class="col-sm-9 ">
+                          <input type="date" class="form-control" id="toDate">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9 ">
+                          <button type="button" style="width:100%" class="btn btn-danger btn-sm" isTaken="no" id="issueBookBtn" onclick="issueBook()"><i
+                              class="fa fa-cloud-upload"></i>&ensp;<b>Issue the book</b></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <textarea class="form-control" id="transactionRemark" maxlength="300"
+                        placeholder="Write your remarks before giving the book...." rows="4"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </center>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel())    
+    $(".loading").fadeOut("slow")
+    let now = new Date(), day = ("0" + now.getDate()).slice(-2), month = ("0" + (now.getMonth() + 1)).slice(-2), year = now.getFullYear();
+    $('#fromDate').val(year + "-" + month + "-" + (day));
+    let after = addMonths(new Date(year, month, day), 6)
+    day = ("0" + after.getDate()).slice(-2);
+    month = ("0" + (after.getMonth() + 1)).slice(-2);
+    year = after.getFullYear();
+    $('#toDate').val(year + "-" + month + "-" + (day));
+    $(function () {
+      $("#chlbkId").keyup(function () {
+        this.value = this.value.toLocaleUpperCase();
+      })
+      $("#rollNumber").keyup(function () {
+        this.value = this.value.toLocaleUpperCase();
+      })
+    })
+  })
+
+  function addMonths(date, months) {
+    var d = date.getDate();
+    date.setMonth(date.getMonth() + +months);
+    if (date.getDate() != d)  date.setDate(0);
+    return date;}
+
+function clearStudent(){
+$(".studentName").html("-");
+$(".studentClass").html("-");
+$(".mobile").html("-");
+$(".studentStatus").html("-");
+$(".studentIsDefaulter").html("-");  }
+function clearBook(){
+  $("#issueBookBtn").attr("isTaken","no")
+$(".bookName").html("-");
+$(".author").html("-");
+$(".price").html("-");
+$(".bookStatus").html("-");
+$(".bookRemarks").html("-"); }
+
+async  function listRollNumber(){ 
+    let rollNumber=$("#rollNumber").val(); if(isEmpty(rollNumber)) return;
+    let data = await ipcRenderer.sendSync('student', { action: "listRollNumber", rollNumber:rollNumber})
+    let options=[], values=data.data;
+    if(values.length==0){ $("#rollNumber").val("");  $("#rollNumber").attr("placeholder","No student found") }
+    else{ $("#rollNumber").attr("placeholder","Enter the roll number")
+    for(var i=0;i<values.length;i++){
+    options.push(`<option value="`+values[i].ROLL_NO+`">`+values[i].ROLL_NO+`</option>`)} }
+    $("#rollNumberList").html(options);
+    }
+
+async function listChildBookId(){
+    let chlbkId=$("#chlbkId").val();  if(isEmpty(chlbkId)) return;
+    let data = await ipcRenderer.sendSync('book', { action: "listChlbkId", chlbkId:chlbkId})
+    let options=[], values=data.data;
+    if(values.length==0){ $("#chlbkId").val("");$("#chlbkId").attr("placeholder","No book found") }
+    else{ $("#chlbkId").attr("placeholder","Enter the child book id")
+    for(var i=0;i<values.length;i++){options.push(`<option value="`+values[i].CHLBK_ID+`">`+values[i].CHLBK_ID+`</option>`)} }
+    $("#chlbkIdList").html(options);
+    }
+
+
+
+   async function loadStudent(){
+      let rollNumber=$("#rollNumber").val(); if(isEmpty(rollNumber)) return;
+    let data = await ipcRenderer.sendSync('student', { action: "loadStudForIsuBk", rollNumber:rollNumber})
+    clearStudent();  data=data.data  
+    if($.isEmptyObject(data)){ 
+      await showAlert("Alert!","Something went wrong!" )  
+      $("#rollNumber").val("")
+    }else{ 
+$(".studentName").html(data.NAME);
+$(".studentClass").html(((data.COURSE==="B")?"BSc CS ":"MSc CS ")+data.BATCH);
+$(".mobile").html(data.PHONE);
+$(".studentStatus").html((isEmpty(data.STATUS))?"-":data.STATUS);
+$(".studentIsDefaulter").html(((data.DEFAULTER===true)?`<b style="color:red">Yes</b>`:`<b style="color:green">No</b>`));
+    }
+    }
+    async function loadBook(){
+    let chlbkId=$("#chlbkId").val();  if(isEmpty(chlbkId)) return;
+    let data = await ipcRenderer.sendSync('book', { action: "loadBokForIsuBk", chlbkId:chlbkId})
+    clearBook();   data=data.data  
+    if($.isEmptyObject(data)){ 
+      await showAlert("Alert!","Something went wrong!" )  
+      $("#chlbkId").val("");
+    }else{    
+$(".bookName").html(data.BOOK_NAME);
+$(".author").html(data.AUTHOR);
+$(".price").html(data.PRICE); 
+$(".bookStatus").html((data.STATUS==="IN_STOCK")? `<b style="color:green">In Stock</b>` : `<b style="color:red; font-size:11px;">`+data.STATUS+" - taken</b>");
+$(".bookRemarks").html(data.REMARKS); 
+if(data.STATUS==="IN_STOCK") $("#issueBookBtn").attr("isTaken","no")
+else $("#issueBookBtn").attr("isTaken","yes")
+    }
+    }
+
+ 
+
+    async function issueBook(){
+      let rollNumber=$("#rollNumber").val(); 
+    let chlbkId=$("#chlbkId").val(); 
+    let fromDate=$("#fromDate").val(); 
+    let toDate=$("#toDate").val(); 
+    let transactionRemark=$("#transactionRemark").val(); 
+    let isTaken=$("#issueBookBtn").attr("isTaken")
+    let message="";
+    if(isEmpty(rollNumber)) {await showAlert("Alert!","Kindly enter the 'roll number'!" ); return; }
+    if(isEmpty(chlbkId)) {await showAlert("Alert!","Kindly enter the 'child book ID'!" ); return; }
+    if(isEmpty(fromDate)) {await showAlert("Alert!","Kindly enter the 'from date'!" ); return; }
+    if(isEmpty(toDate)) {await showAlert("Alert!","Kindly enter the 'to date'!" ); return; }
+    if(new Date(fromDate)>=new Date(toDate))  {await showAlert("Alert!","Kindly enter the valid date. 'to date' must greater than 'from date'!" ); return; }
+    if(isEmpty(isTaken))  {await showAlert("Alert!","Something went wrong!" ); window.location.replace("issue.html"); }
+    if(isTaken==="yes")   {await showAlert("Alert!","This book was already issued!" ); return;}
+
+let saveJson={
+ROLL_NO:rollNumber,
+CHLBK_ID:chlbkId,
+FROM_DATE:fromDate,
+TO_DATE:toDate,
+REMARKS:transactionRemark,
+MSTBK_ID:""
+} 
+
+let data = await ipcRenderer.sendSync('transaction', { action: "issueBook", data:saveJson})
+if(data.success){
+  await showAlert("Alert!","Successfully issued to "+rollNumber+"!" );
+}else{ 
+  await showAlert("Alert!","Something went wrong!" ); 
+}
+window.location.replace("issue.html")
+    }
+</script>
+</html>

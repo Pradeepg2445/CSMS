@@ -1,0 +1,83 @@
+body{
+    background-color: rgb(250 255 252);
+    font-family: serif;
+}
+.loading {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    background-color: #fff;
+    z-index: 99;
+    }      
+.loading-image {
+    z-index: 100;
+}
+.noselect {
+    -webkit-touch-callout: none;  
+      -webkit-user-select: none; 
+       -khtml-user-select: none;  
+         -moz-user-select: none;  
+          -ms-user-select: none;  
+              user-select: none;  
+                                     
+  }
+.left-navebar {
+    width: 100%;
+    height: 100%;
+    background-color: #28333e;
+    padding: 5px;
+    color: white;
+}
+
+.left-navebar .container {
+    padding: 1px !important;
+}
+
+.nave-button {
+    width: 100%;
+    background-color: #28333e;
+    color: white;
+    border: none;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.nave-button:hover {
+    background-color: #394855;
+}
+
+.active {
+    background-color: #5f6c76 !important;
+}
+
+.mandatory{
+    
+    font-size: 10px;
+    font-weight: bold;
+    color:red;
+}
+
+.onTopSelect{
+    font-size: 20px;
+    padding: 5px;
+    border: 1px solid #cfcfcf;
+    border-radius: 5px;
+}
+
+
+table.dataTable tbody td{
+    word-break:break-word !important;
+    vertical-align: top !important;
+}
+
+table.dataTable.cell-border tbody tr:first-child td {
+    vertical-align: middle !important;
+  }

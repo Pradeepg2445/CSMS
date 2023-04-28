@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Student Profile - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='./plugin/select-search-better-dropdown/style/BetterDropdown/jquery.betterdropdown.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-12 " style="padding:8px">
+        <h3><span class="pageHead"></span>
+          <div class="float-end">
+            <button class="btn btn-primary btn-sm" onclick="add()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+              Save</button>
+            <button class="btn btn-danger btn-sm cancelBtn " style="display: none;" onclick="cancel()"><i
+                class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+            <button class="btn btn-danger btn-sm backBtn " style="display: none;" onclick="back()"><i
+                class="fa fa-times" aria-hidden="true"></i> Back</button>
+          </div>
+        </h3>
+        <hr>
+        <div style="width: 100%;">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="col-md-12 mb-3">
+                <label for="validationDefaultUsername">Roll Number&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupPrepend2"><i class="fa fa-user"
+                        style="font-size: 2rem;" aria-hidden="true"></i></span>
+                  </div>
+                  <input type="text" class="form-control" onblur="checkRollNumber()" maxlength="25"
+                    style="font-size: 21px; text-transform: uppercase;  font-weight: 500;" id="rollNumber"
+                    placeholder="Roll Number" aria-describedby="inputGroupPrepend2">
+                </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Student Name&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <input type="text" class="form-control" maxlength="50" id="name" placeholder="Student Name">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault01">Course&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <select class="form-control" id="course">
+                  <option value="" selected disabled>Select the course</option>
+                  <option value="B">BSc Computer Science</option>
+                  <option value="M">MSc Computer Science</option>
+                </select>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Batch&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <div class="row">
+                  <div class=" col-md-6"> <select class="form-control" id="batchFrom">
+                    </select>
+                  </div>
+                  <div class=" col-md-6">
+                    <select class="form-control col-md-6" id="batchTo">
+                    </select>
+                  </div>
+
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-md-12 mb-3">
+                  <label for="validationDefault03">Date of Birth&ensp;<span class="mandatory">* This field is
+                      mandatory</span></label>
+                  <input type="date" class="form-control" id="dob" placeholder="Date of Birth">
+                </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Gender&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <div class="row">
+                  <div class="col-md-6">
+                    <select class="form-control" id="gender">
+                      <option value="" selected disabled>Select the gender</option>
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
+                      <option value="O">Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Blood Group</label>
+                <input type="text" class="form-control" id="bloodGroup" maxlength="8" placeholder="Blood Group">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Phone&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <input type="text" class="form-control" id="phone"  onkeyup="this.value=this.value.replace(/[^\d]/,'')" maxlength="10" placeholder="Phone">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="Email" maxlength="30" onblur="isValidEmail(this)">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Address&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <textarea class="form-control" id="address" rows="2" maxlength="150"
+                  placeholder="Enter the student address"></textarea>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Father Name&ensp;<span class="mandatory">* This field is
+                    mandatory</span></label>
+                <input type="text" class="form-control" id="fatherName" maxlength="50" placeholder="Father name">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="validationDefault02">Mother Name</label>
+                <input type="text" class="form-control" id="motherName" maxlength="50" placeholder="Mother name">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=window.jQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript">
+  require("./plugin/select-search-better-dropdown/scripts/BetterDropdown/jquery.betterdropdown.js")(window, $)
+</script>
+
+<script type="text/javascript">
+  $(document).ready(async function () {
+    let data = await ipcRenderer.sendSync('user', { action: "getPageTo" })
+    var year = parseInt(new Date().getFullYear());
+    let yearArray = [year + 3, year + 2, year + 1, year, year - 1, year - 2, year - 3];
+    let option = ` <option value="" selected disabled>From</option>\n`;
+    for (let i = 0; i < 7; i++) {
+      option += `<option value="` + yearArray[i] + `">` + yearArray[i] + `</option>\n`;
+    }
+    $(function(){
+      $("#rollNumber").keyup(function(){
+        this.value=this.value.toLocaleUpperCase();
+      })
+    })
+ 
+    $("#batchFrom").html(option);
+    $("#batchTo").html(option);
+
+    if (data.data.pageType === "add_student") {
+      $(".cancelBtn").show();
+      $(".backBtn").hide();
+      $(".pageHead").text("Add New Student");      
+    $("#batchFrom").betterDropdown();
+    $("#batchTo").betterDropdown();
+    $("#gender").betterDropdown();
+    } else if (data.data.pageType === "student_profile") {
+      $(".cancelBtn").hide();
+      $(".backBtn").show();
+      $(".pageHead").text("View Student Details");
+      $("#rollNumber").attr("disabled",true)
+      // data.rollNumber
+      await loadStudentProfile(data.data.rollNumber);
+    } else {
+      await showAlert("Alert!", "Something went wrong.");
+      window.location.replace("student.html");
+    }
+ 
+    $(".loading").fadeOut("slow");
+  })
+
+async function loadStudentProfile(rollNumber){
+ $("#rollNumber").val(rollNumber);
+    let data = await ipcRenderer.sendSync('student', { action: "studentView", filter: " ROLL_NO ='"+rollNumber+"'" })
+    let row=data.data;
+     $("#name").val(row[0].NAME);
+     $("#course").val(row[0].COURSE);
+    let batch=(row[0].BATCH).split("-")
+    $("#batchFrom").betterDropdown({manualValueSet:"true",manualValue:batch[0],manualId:"#batchFrom"});    
+    $("#batchTo").betterDropdown({manualValueSet:"true",manualValue:batch[1],manualId:"#batchFrom"}); 
+    $("#gender").betterDropdown({manualValueSet:"true",manualValue:row[0].GENDER,manualId:"#gender"});
+
+     $("#batchTo").val(batch[1]);
+    $("#dob").val(row[0].DOB);
+     $("#bloodGroup").val(row[0].BLOOD_GROUP);
+     $("#phone").val(row[0].PHONE);
+     $("#email").val(row[0].EMAIL);
+     $("#address").val(row[0].ADDRESS);
+     $("#fatherName").val(row[0].FATHER_NAME);
+     $("#motherName").val(row[0].MOTHER_NAME);
+     
+    // $("#gender").betterDropdown();
+}
+
+
+  async function cancel() {
+    let a = await showConfirm("Alert!", "Do you really want to cancel this process?")
+    if (parseInt(a.data) === 0) {
+      $(".loading").show()
+      await ipcRenderer.sendSync('user', { action: "clearPageTo" })
+      window.location.replace("student.html")
+    }
+  }
+
+
+  function back() {
+    $(".loading").show()
+    window.location.replace("student.html")
+  }
+
+
+  async function checkRollNumber() {
+    let rollNumber = $("#rollNumber").val();
+    if (!isEmpty(rollNumber)) {
+      let data = await ipcRenderer.sendSync('student', { action: "checkRollNumber", rollNumber: rollNumber })
+      if (data.data) {
+        $("#rollNumber").val("");
+        $("#rollNumber").focus();
+        await showAlert("Alert!", "This roll number already exist.");
+      }
+    }
+  }
+
+
+  async function add() {
+    let rollNumber = $("#rollNumber").val();
+    let name = $("#name").val();
+    let course = $("#course").val();
+    let batchFrom = $("#batchFrom").val();
+    let batchTo = $("#batchTo").val();
+    let dob = $("#dob").val();
+    let gender = $("#gender").val();
+    let bloodGroup = $("#bloodGroup").val();
+    let phone = $("#phone").val();
+    let email = $("#email").val();
+    let address = $("#address").val();
+    let fatherName = $("#fatherName").val();
+    let motherName = $("#motherName").val();
+    var showError = false;
+    if (isEmpty(rollNumber) || isEmpty(name) || isEmpty(course) || isEmpty(batchFrom) || isEmpty(batchTo) || isEmpty(dob) || isEmpty(gender) ||
+      isEmpty(phone) || isEmpty(address) || isEmpty(fatherName)) {
+      showError = true;
+      errMessage = "Kindly enter fill the mandatory fields.";
+    } else if (rollNumber.length <= 3) {
+      showError = true;
+      errMessage = "Roll number charcters should be grater then three.";
+    } else if (phone.length <= 9) {
+      showError = true;
+      errMessage = "Kindly enter the valid phone number";
+    } else if (address.length <= 5) {
+      showError = true;
+      errMessage = "Address charcters should be grater then five.";
+    }
+    if (showError) {
+      await showAlert("Alert!", errMessage);
+      return;
+    }
+    let data = {
+      rollNumber: rollNumber,
+      name: name,
+      course: course,
+      batch: batchFrom + "-" + batchTo,
+      dob: dob,
+      gender: gender,
+      bloodGroup: bloodGroup,
+      phone: phone,
+      email: email,
+      address: address,
+      fatherName: fatherName,
+      motherName: motherName,
+    }
+    let a = await showConfirm("Alert!", "Do you really want save this record?");
+    if (parseInt(a.data) === 0) {
+      $(".loading").show()
+      let response = await ipcRenderer.sendSync('student', { data, action: "addStudent" })
+      let message = "";
+      if (response == 1) {
+        message = "Student record was successfully added."
+      } else {
+        message = "Something went wrong."
+      }
+      window.location.replace("student_profile.html")
+    }
+  }
+</script>
+
+</html>

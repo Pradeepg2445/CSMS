@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Dashboard - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='../node_modules/datatables/media/css/jquery.dataTables.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Student Details
+          <div class="float-end">
+            <select class="onTopSelect" id="course" onchange="loadBatch()">
+              <option value="B">BSc Computer Science</option>
+              <option value="M">MSc Computer Science</option>
+            </select> 
+
+            <input list="batch" class="onTopSelect" id="batchValue" placeholder="Enter the batch">
+           <datalist  class="onTopSelect"  id="batch">
+           </datalist>
+
+            <button class="btn btn-primary btn-sm" onclick="loadData()"><i class="fa fa-filter" aria-hidden="true"></i>
+              Load</button>
+            <button class="btn btn-success btn-sm" onclick="addStudent()"><i class="fa fa-plus" aria-hidden="true"></i>
+              Add</button>
+          </div>
+        </h3>
+        <hr>
+        <center>
+          <div style="width: 99%;">
+            <table id="studentData" class="cell-border hover">
+              <thead>
+                <tr>
+                  <th>Role No</th>
+                  <th>Class</th>
+                  <th>Name</th>
+                  <th>DOB</th>
+                  <th>Phone</th>
+                  <th>Father Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="showTableData">
+              </tbody>
+
+            </table>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  require('../node_modules/datatables/media/js/jquery.dataTables.min.js')(window, $)
+</script>
+
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel())
+    await loadBatch();
+    await loadData();
+    $('#studentData').dataTable({
+      "pageLength": 20
+    });
+    $(".loading").fadeOut("slow");
+  })
+
+
+  async function loadBatch(){  
+    let courseVal=$("#course").val();
+    if(isEmpty(courseVal)) return;
+     
+    let data = await ipcRenderer.sendSync('student', { action: "allBatch", course:courseVal})
+    let options=[];
+    let values=data.data;
+  if(values.length==0){
+    $("#showTableData").html("")
+    $("#batchValue").val(""); $("#batchValue").attr("disabled",true); $("#batchValue").attr("placeholder","No batch found") }
+  else{
+    $("#batchValue").attr("disabled",false)
+    $("#batchValue").attr("placeholder","Enter the batch")
+    for(var i=0;i<values.length;i++){
+  if(i==0){$("#batchValue").val(values[0].BATCH) }
+options.push(`<option value="`+values[i].BATCH+`">`+values[i].BATCH+`</option>`)
+} 
+  }
+$("#batch").html(options);
+  }
+
+
+  async function loadData() {
+    let courseVal=$("#course").val();
+    let batchVal=$("#batchValue").val();
+  
+    if(isEmpty(courseVal)) return;
+    if(isEmpty(batchVal))  await loadBatch(); 
+    batchVal=$("#batchValue").val();   
+    if(isEmpty(batchVal)) return;   
+
+    let data = await ipcRenderer.sendSync('student', { action: "studentView", filter: ` COURSE='`+courseVal+`' AND BATCH='`+batchVal+`'` })
+    const rows = data.data;
+    let html = ``;
+    var className;
+    for (var i = 0; i < rows.length; i++) {
+      className = "";
+      if (rows[i].COURSE == "B") className += "BSc CS";
+      if (rows[i].COURSE == "M") className += "MSc CS";
+      className += " " + rows[i].BATCH;
+
+      html += `
+      <tr>
+      <td>`+ rows[i].ROLL_NO + `</td>
+      <td>`+ className + `</td>
+      <td>`+ rows[i].NAME + `</td>
+      <td>`+ rows[i].DOB + `</td>
+      <td>`+ rows[i].PHONE + `</td>
+      <td>`+ rows[i].FATHER_NAME + `</td>
+      <td>
+      <button class="btn btn-primary btn-sm" onclick="view('`+ rows[i].ROLL_NO + `')"><i class="fa fa-eye" aria-hidden="true"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteStudent('`+ rows[i].ROLL_NO + `')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      </td>
+      </tr>\n`;
+    }
+    
+    if(rows.length==0) $("#showTableData").html("")
+    else $("#showTableData").html(html)
+  }
+
+  async function deleteStudent(rollNumber){
+    let a = await showConfirm("Alert!", "Do you really want to delete this student record?")
+    if (parseInt(a.data) === 0) {
+    await ipcRenderer.sendSync('student', { action: "deleteStudent", rollNumber:rollNumber })
+    window.location.replace("student.html")
+
+    }
+  }
+
+async function view(rollNumber){
+    await ipcRenderer.sendSync('user', { action: "setPageTo", page: "student_profile", rollNumber:rollNumber })
+    window.location.replace("student_profile.html")
+}
+  async function addStudent() {
+    await ipcRenderer.sendSync('user', { action: "setPageTo", page: "add_student" })
+    window.location.replace("student_profile.html")
+  }
+</script>
+
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Settings - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='../node_modules/datatables/media/css/jquery.dataTables.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='./plugin/select-search-better-dropdown/style/BetterDropdown/jquery.betterdropdown.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+  <style>
+    .settingsBtn-front {
+      background: #d63384eb;
+      transition: transform 600ms cubic-bezier(.3, .7, .4, 1);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      display: block;
+      position: relative;
+      padding: 12px 27px;
+      color: white;
+      will-change: transform;
+      transform: translateY(-4px)
+    }
+    .settingsBtn-pushable {
+      user-select: none;
+      width: 280px;
+      touch-action: manipulation;
+      position: relative;
+      -webkit-user-select: none;
+      border: none;
+      outline-offset: 4px;
+      transition: filter 250ms;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+    .settingsBtn-pushable:active .settingsBtn-shadow {
+      transform: translateY(1px);
+      transition: transform 34ms;
+    }
+    .settingsBtn-pushable:active .settingsBtn-front {
+      transform: translateY(-2px);
+      transition: transform 34ms;
+    }
+    .settingsBtn-pushable:focus:not(:focus-visible) {
+      outline: none;
+    }
+    .settingsBtn-pushable:hover {
+      filter: brightness(110%);
+      -webkit-filter: brightness(110%);
+    }
+    .settingsBtn-edge {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      background: linear-gradient(to left, hsl(340deg 100% 16%) 0%, hsl(340deg 100% 32%) 92%, hsl(340deg 100% 16%) 100%);
+      border-radius: 12px;
+      left: 0;
+      width: 100%;
+    }
+    .settingsBtn-pushable:hover .settingsBtn-shadow {
+      transform: translateY(4px);
+      transition: transform 250ms cubic-bezier(.3, .7, .4, 1.5);
+    }
+    .settingsBtn-shadow {
+      width: 100%;
+      border-radius: 12px;
+      transition: transform 600ms cubic-bezier(.3, .7, .4, 1);
+      background: hsl(0deg 0% 0% / 0.25);
+      will-change: transform;
+      height: 100%;
+      position: absolute;
+      transform: translateY(2px);
+      left: 0;
+      top: 0;
+    }
+    .settingsBtn-pushable:hover .settingsBtn-front {
+      transform: translateY(-6px);
+      transition: transform 250ms cubic-bezier(.3, .7, .4, 1.5);
+    }
+    @media (min-width: 768px) {
+      .settingsBtn-front {
+        font-size: 1.25rem;
+        padding: 12px 42px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Settings</h3>
+        <hr>
+        <center>
+          <div class="jumbotron d-flex align-items-center mainBody" style="min-height: 78vh!important;">
+            <div class="middle-form " style="width: 99%;">
+              <button class="settingsBtn-pushable" role="button" onclick="updateInfo('userName')">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-user-circle" aria-hidden="true"></i>&ensp;Change User Name</span> </button>&emsp;
+              <button class="settingsBtn-pushable" role="button" onclick="updateInfo('password')">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-key" aria-hidden="true"></i>&ensp;Change Password</span> </button><br><br>
+              <button class="settingsBtn-pushable" role="button" onclick="updateInfo('email')">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>&ensp;Change Email</span> </button>&emsp;
+              <button class="settingsBtn-pushable" role="button" onclick="changeWallpaper()">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-picture-o" aria-hidden="true"></i>&ensp;Change Wallpaper</span> </button><br><br>
+              <button class="settingsBtn-pushable" role="button" onclick="importDatabase()">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-upload" aria-hidden="true"></i>&ensp;Upload Database</span> </button>&emsp;
+              <button class="settingsBtn-pushable" role="button" onclick="exportDatabase()">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-download" aria-hidden="true"></i>&ensp;Download Database</span> </button><br><br>
+              <button class="settingsBtn-pushable" role="button" onclick="updateInfo('deleteBatch')">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-trash" aria-hidden="true"></i>&ensp;Delete Batch</span> </button>&emsp;
+              <button class="settingsBtn-pushable" role="button" onclick="updateInfo('resetAppication')">
+                <span class="settingsBtn-shadow"></span> <span class="settingsBtn-edge"></span> <span
+                  class="settingsBtn-front text">
+                  <i class="fa fa-refresh" aria-hidden="true"></i>&ensp;Reset Application</span> </button><br>
+            </div>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+  <div class="modal" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document"
+      style="margin-top: 11%;margin-left: 40%;box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTitle"></h5>
+          <button type="button" onclick="closeView()"
+            style="background-color: transparent;border: none;color:red; font-weight: bold;font-size: 22px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalInputArea">
+        </div>
+        <div class="modal-footer" id="modalBtnArea">
+        </div>
+      </div>
+    </div>
+</body>
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=window.jQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  require('../node_modules/datatables/media/js/jquery.dataTables.min.js')(window, $)
+  require("./plugin/select-search-better-dropdown/scripts/BetterDropdown/jquery.betterdropdown.js")(window, $)
+</script>
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel())
+    $(".loading").fadeOut("slow");
+  })
+  async function loadBatch() {
+    let courseVal = $("#course").val();
+    if (isEmpty(courseVal)) return;
+    let data = await ipcRenderer.sendSync('student', { action: "allBatch", course: courseVal })
+    let options = [];
+    let values = data.data;
+    if (values.length == 0) {
+      $("#batchValue").val(""); $("#batchValue").attr("disabled", true); $("#batchValue").attr("placeholder", "No batch found")
+    }
+    else {
+      $("#batchValue").attr("disabled", false)
+      $("#batchValue").attr("placeholder", "Enter the batch")
+      for (var i = 0; i < values.length; i++) {
+        options.push(`<option value="` + values[i].BATCH + `">` + values[i].BATCH + `</option>`)
+      }
+    }
+    $("#batch").html(options);
+  }
+  function closeView() {
+    $("#modal").fadeOut("fast");
+}
+async function updateInfo(type) {
+let btnHtml = "", mainHtml = "", title = "";
+if (type === "userName") {
+let a = await ipcRenderer.sendSync('user', { name: "name", action: "getCookie" })
+title = `<i class="fa fa-user-circle" aria-hidden="true"></i> Change User Name`;
+mainHtml = ` <div >
+<label >User Name&ensp;<span class="mandatory">* This field is
+mandatory</span></label>
+<input type="text" class="form-control" placeholder="Name" id="usrname" maxlength="50" value="`+ a.data + `">             
+</div>`
+btnHtml = `<button type="button" class="btn btn-primary" onclick="updateUserName()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+`
+
+} else if (type === "password") {
+title = `<i class="fa fa-user-circle" aria-hidden="true"></i> Change User Name`;
+mainHtml = ` <div >
+<label >Current Password&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input type="password" class="form-control" placeholder="Current Password" id="cPassword" maxlength="20">
+</div>
+<div >
+<label >New Password&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input type="password" class="form-control" placeholder="New Password" id="nPassword" maxlength="20">
+</div>`
+title = ` <i class="fa fa-key" aria-hidden="true"></i> Change Password`;
+btnHtml = `<button type="button" class="btn btn-primary" onclick="updatePassword()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+`
+
+} else if (type === "deleteBatch") {
+title = `<i class="fa fa-trash" aria-hidden="true"></i> Delete Batch`;
+mainHtml = `    <div>
+<label >Course&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<select class="form-control" id="course" onchange="loadBatch()">
+<option value="" selected disabled>Select the course</option>
+<option value="B">BSc Computer Science</option>
+<option value="M">MSc Computer Science</option>
+</select>
+</div>
+<div>  
+<label >Batch&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input list="batch" class="form-control" id="batchValue" placeholder="Enter the batch" disabled>
+<datalist  class="onTopSelect"  id="batch">
+</datalist>
+</div>  
+<div >
+<label >Password&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input type="password" class="form-control" placeholder="Password" id="password" maxlength="20">
+</div> 
+`
+btnHtml = `<button type="button" class="btn btn-danger" onclick="deleteBatch()"><i class="fa fa-warning" aria-hidden="true"></i> Delete</button></div>
+`
+} else if(type==="email"){
+title = `<i class="fa fa-envelope" aria-hidden="true"></i> Change Email`;
+mainHtml = ` <div >
+<label >Password&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input type="password" class="form-control" placeholder="Current Password" id="password" maxlength="20">
+</div>
+<div >
+<label >New Email&ensp;<span class="mandatory">* This field is mandatory</span></label> 
+<input type="email" class="form-control" placeholder="Email" id="email" maxlength="50" onblur="isValidEmail(this)">
+</div>` 
+btnHtml = `<button type="button" class="btn btn-primary" onclick="updateEmail()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+`
+} else if(type==="resetAppication"){
+title = `<i class="fa fa-refresh" aria-hidden="true"></i> Reset Application`;
+mainHtml = ` <div >
+<label >Password&ensp;<span class="mandatory">* This field is mandatory</span></label>
+<input type="password" class="form-control" placeholder="Current Password" id="password" maxlength="20">
+</div> ` 
+btnHtml = `<button type="button" class="btn btn-danger" onclick="resetAppication()"><i class="fa fa-warning" aria-hidden="true"></i> Continue to reset</button></div>
+`
+}
+$("#modalInputArea").html(mainHtml)
+$("#modalBtnArea").html(btnHtml)
+$("#viewTitle").html(title)
+$("#modal").show()
+}
+  async function updateUserName() {
+    let usrname = $("#usrname").val();
+    if (isEmpty(usrname)) { await showAlert("Alert!", "Kindly enter the user name!"); return; }
+    let a = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+    let b = await ipcRenderer.sendSync('user', { action: "updateUsername", usrname, userid: a.data });
+    if (b.success) {
+      await closeView()
+      await showAlert("Alert!", "Successfully updated!");
+      window.location.replace("settings.html")
+    } else await showAlert("Alert!", "Something went wrong!");
+  }
+  async function updatePassword() {
+    let cPassword = $("#cPassword").val();
+    let nPassword = $("#nPassword").val(); 
+    if (isEmpty(cPassword)) { await showAlert("Alert!", "Kindly enter the current password!"); return; }
+    if (isEmpty(nPassword)) { await showAlert("Alert!", "Kindly enter the new password!"); return; }
+    let a = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+    let b = await ipcRenderer.sendSync('user', { action: "updatePassword", cPassword, nPassword, userid: a.data });
+    if (b.success) {
+      await closeView()
+      await showAlert("Alert!", "Successfully updated!");
+      window.location.replace("settings.html")
+    } else await showAlert("Alert!", " Try again later. Something went wrong.\nNote: Kindly check your current password is correct.");
+    $("#cPassword").val("");
+    $("#nPassword").val("");
+  }
+  
+  async function updateEmail() {
+    let password = $("#password").val();
+    let email = $("#email").val(); 
+    if (isEmpty(password)) { await showAlert("Alert!", "Kindly enter the current password!"); return; }
+    if (isEmpty(email)) { await showAlert("Alert!", "Kindly enter the new email!"); return; }
+    let a = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+    let b = await ipcRenderer.sendSync('user', { action: "updateEmail", password, email, userid: a.data });
+    if (b.success) {
+      await closeView()
+      await showAlert("Alert!", "Successfully updated!");
+      window.location.replace("settings.html")
+    } else await showAlert("Alert!", " Try again later. Something went wrong. \nNote: Kindly check your current password is correct.");
+    $("#password").val("");
+    $("#email").val("");
+  }
+
+  async function exportDatabase() {
+    let a = await ipcRenderer.sendSync('exportDatabase')
+    if (a.data === 3 || a.date === '3') {
+    } else if (a.data === 1 || a.data === '1') {
+      await showAlert("Alert!", "Successfully downloaded!");
+    } else await showAlert("Alert!", "Something went wrong!");
+  }
+  async function importDatabase() {
+    let a = await ipcRenderer.sendSync('importDatabase')
+    if (a.data === 3 || a.date === '3') {
+    } else if (a.data === 1 || a.data === '1') {
+      await showAlert("Alert!", "Successfully uploaded!");
+    } else await showAlert("Alert!", "Something went wrong!");
+  }
+  
+  async function changeWallpaper() {
+    
+    let b = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+    let a = await ipcRenderer.sendSync('changeWallpaper',{userId:b.data})
+    if (a.data === 3 || a.date === '3') {
+    } else if (a.data === 1 || a.data === '1') {
+      await showAlert("Alert!", "Successfully wallpaper updated!");
+    } else await showAlert("Alert!", "Something went wrong!");
+  }
+
+  async function resetAppication(){
+    let password = $("#password").val(); 
+    if (isEmpty(password)) { await showAlert("Alert!", "Kindly enter the current password!"); return; } 
+    closeView()
+    let a = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+    let b = await showConfirm("Alert!", "Do you really want to reset the CSMS application?\nNote: You can't be recover the database again!\nClick Yes to continue.")
+    if (parseInt(b.data) === 0) {
+    let c= await ipcRenderer.sendSync('resetAppication', { password, userid: a.data });
+  if(c.success){ 
+    await showAlert("Alert!", "Application reset was completed successfully!");
+    window.location.replace("settings.html")
+  }else await showAlert("Alert!", "Try again later. Something went wrong. \nNote: Kindly check your current password is correct.");
+
+   
+    }
+  }
+
+  
+  async function deleteBatch() {
+    let course = $("#course").val(); 
+    let batch = $("#batchValue").val(); 
+    let password = $("#password").val(); 
+    if (isEmpty(course) || isEmpty(batch) || isEmpty(password)) { await showAlert("Alert!", "Kindly enter the all field"); return; }  
+
+    let a = await ipcRenderer.sendSync('user', { name: "user_id", action: "getCookie" })
+
+    let b = await ipcRenderer.sendSync('student', { action: "deleteBatch",course,batch,password,userid:a.data })
+    if(b.data===3){
+    await showAlert("Alert!", "Student records not found in this batch!");
+    window.location.replace("settings.html")
+    }else if(b.data===1){
+    await showAlert("Alert!", "Batch ("+batch+") deleted successfully!");
+    window.location.replace("settings.html")
+  }else await showAlert("Alert!", "Try again later. Something went wrong. \nNote: Kindly check your current password is correct.");
+
+  }
+
+</script>
+</html>

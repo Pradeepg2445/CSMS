@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Child Book - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='../node_modules/datatables/media/css/jquery.dataTables.min.css'>
+    <link rel='stylesheet' type='text/css' media='screen'
+      href='./plugin/select-search-better-dropdown/style/BetterDropdown/jquery.betterdropdown.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Child Book
+          <div class="float-end">  
+            
+            <input list="mstBookName" class="onTopSelect" id="mstBookValue" placeholder="Enter the book">
+           <datalist  class="onTopSelect"  id="mstBookName">
+           </datalist>
+           
+           <button class="btn btn-primary btn-sm" onclick="loadData()"><i class="fa fa-filter" aria-hidden="true"></i>
+            Load</button>
+
+            <button class="btn btn-success btn-sm" onclick="view('')"><i class="fa fa-plus" aria-hidden="true"></i>
+              Add</button>
+          </div>
+        </h3>
+        <hr>
+        <center>
+          <div style="width: 99%;">
+            <table id="childBookData" class="cell-border hover">
+              <thead>
+                <tr>
+                  <th>Child ID</th>
+                  <th>Book Name</th>
+                  <th>Author</th>
+                  <th>Remarks</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="showTableData">
+              </tbody>
+
+            </table>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document" style="margin-top: 11%;margin-left: 35%;box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTitle"></h5>
+          <button type="button" onclick="closeView()" style="background-color: transparent;border: none;color:red; font-weight: bold;font-size: 22px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> 
+        <div class="modal-body">
+
+          <div >
+            <label >Book Name&ensp;<span class="mandatory">* This field is
+                mandatory</span></label>
+               <span id="selectArea">
+               </span> 
+          </div>
+          <div >
+            <label >Child ID&ensp;<span class="mandatory">* This field is
+                mandatory</span></label>
+            <input type="text" class="form-control" maxlength="20" id="chlbkId" placeholder="Child Book ID" style="text-transform: uppercase;" onblur="checkChildId()">
+          </div>
+          <div >
+            <label >Remarks&ensp;</label>
+            <textarea type="text" class="form-control" maxlength="150" id="remarks" placeholder="Write your remarks here..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveChildBook()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=window.jQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  require('../node_modules/datatables/media/js/jquery.dataTables.min.js')(window, $)
+  require("./plugin/select-search-better-dropdown/scripts/BetterDropdown/jquery.betterdropdown.js")(window, $)
+</script>
+
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel())
+    await loadBook();
+    await loadData();
+    $('#childBookData').dataTable({
+      "pageLength": 20,
+    "autoWidth":false
+    });
+    $(".loading").fadeOut("slow");
+    $(function(){
+      $("#chlbkId").keyup(function(){
+        this.value=this.value.toLocaleUpperCase();
+      })
+    })
+  })
+
+
+  
+  async function loadBook(){      
+    let data = await ipcRenderer.sendSync('book', { action: "allMasterBook"})
+    let options=[];
+    let values=data.data;
+  if(values.length==0){
+    $("#showTableData").html("")
+    $("#mstBookValue").val(""); $("#mstBookValue").attr("disabled",true); $("#mstBookValue").attr("placeholder","No book found") }
+  else{
+    $("#mstBookValue").attr("disabled",false)
+    $("#mstBookValue").attr("placeholder","Enter the book")
+    for(var i=0;i<values.length;i++){
+  if(i==0){$("#mstBookValue").val(values[0].MSTBK_ID+". "+values[0].BOOK_NAME) }
+options.push(`<option value="`+values[i].MSTBK_ID+`. `+values[i].BOOK_NAME+`">`+values[i].MSTBK_ID+`. `+values[i].BOOK_NAME+`</option>`)
+} 
+  }
+$("#mstBookName").html(options);
+  }
+ 
+
+  async function loadData() { 
+    let mstBookValue=$("#mstBookValue").val();
+  
+    if(isEmpty(mstBookValue))  await loadBook();  
+    mstBookValue=$("#mstBookValue").val();  
+    if(isEmpty(mstBookValue)) return;   
+    let MSTBK_ID=mstBookValue.split(".");
+    console.log(MSTBK_ID)
+
+    let data = await ipcRenderer.sendSync('book', { action: "childBookView",data:" A.MSTBK_ID="+parseInt(MSTBK_ID[0])})
+    const rows = data.data;
+    let html = ``;
+    var className;
+    for (var i = 0; i < rows.length; i++) {
+      html += `
+      <tr> 
+      <td>`+ rows[i].CHLBK_ID + `</td>
+      <td>`+ rows[i].BOOK_NAME + `</td>
+      <td>`+ rows[i].AUTHOR + `</td>
+      <td>`+ rows[i].REMARKS + `</td>
+      <td><b>`+((rows[i].BK_STATUS=="IN_STOCK")?"<font color='green'>In Stock</font>":"<font color='red'>Not Available</font>") + `</b></td>
+      <td>
+      <button class="btn btn-primary btn-sm" onclick="view('`+ rows[i].CHLBK_ID + `')"><i class="fa fa-eye" aria-hidden="true"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteChildBook('`+ rows[i].CHLBK_ID + `')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      </td>
+      </tr>\n`;
+    }
+    
+    if(rows.length==0) $("#showTableData").html("")
+    else $("#showTableData").html(html)
+  }
+
+  async function deleteChildBook(chlbkId){
+    let a = await showConfirm("Alert!", "Do you really want to delete this child book record?")
+    if (parseInt(a.data) === 0) {
+   let g= await ipcRenderer.sendSync('book', { action: "deleteChildBook", chlbkId:chlbkId })
+   if(g.success){
+    
+  await showAlert("Alert!", "Successfully deleted!");
+    window.location.replace("child_book.html")
+
+   }else{
+    
+  await showAlert("Alert!", "Something went wrong!");
+   }
+
+    }
+  }
+
+async function view(chlbkId){
+  $("#selectArea").html(`<select id="bookName"></select>`);
+  if(chlbkId===""){
+    $("#viewTitle").html("Add Child Book") 
+    $("#chlbkId").attr("disabled",false);
+  } else{
+    $("#viewTitle").html("View Child Book")    
+    var b = await ipcRenderer.sendSync('book', { action: "childBookView",data:` CHLBK_ID='`+chlbkId+`'`})
+    $("#chlbkId").val(b.data[0].CHLBK_ID);
+    $("#chlbkId").attr("disabled",true);
+    $("#remarks").val(b.data[0].REMARKS);
+  } 
+ $("#modal").fadeIn("fast");
+
+ let a = await ipcRenderer.sendSync('book', { action: "allMasterBook"})
+ let arr=[];
+ for(var i=0;i<a.data.length;i++){
+  var selected="";
+  if(i==0){selected="selected"; }
+  arr.push(`<option value="`+a.data[i].MSTBK_ID+`" `+selected+`>`+a.data[i].BOOK_NAME+`</option>`)
+ }
+$("#bookName").html(arr);
+if(chlbkId==""){
+  $("#bookName").betterDropdown();
+}else{  
+  
+  $("#selectArea").html(`<select id="bookName" class="form-control" disabled><option value="`+b.data[0].MSTBK_ID+`">`+b.data[0].BOOK_NAME+`</option></select>`);
+ // $("#bookName").betterDropdown();
+ //$("#bookName").betterDropdown({manualValueSet:"true",manualValue:b.data[0].MSTBK_ID,manualId:"#bookName"}); 
+}}
+
+  function closeView(){
+ $("#modal").hide();
+$("#chlbkId").val("");
+$("#remarks").val("");
+  }
+
+
+  async function saveChildBook(){
+let mastbkId=$("#bookName").val();
+let chlbkId=$("#chlbkId").val();
+let remarks=$("#remarks").val();
+if(isEmpty(mastbkId) || isEmpty(chlbkId) ){  
+  await showAlert("Alert!", "Kindly enter fill the mandatory fields.");
+  return;
+}
+  
+
+   let a= await ipcRenderer.sendSync('book', { action: "addChildBook",data:{
+mastbkId:mastbkId,
+remarks:remarks, 
+chlbkId:chlbkId
+}})
+    if(a.success){
+      await showAlert("Alert!","Successfully book data was updated!" ) 
+      window.location.replace("child_book.html") 
+    }else{
+      await showAlert("Alert!","Something went wrong!" )  
+    }
+  }
+
+
+async function checkChildId(){
+  let chlbkId =$("#chlbkId").val();
+    if (!isEmpty(chlbkId)) {
+      let data = await ipcRenderer.sendSync('book', { action: "checkchlbkId", chlbkId: chlbkId })
+      if (data.data) {
+        $("#chlbkId").val("");
+        $("#chlbkId").focus();
+        await showAlert("Alert!", "This child id already exist.");
+      }
+    }
+}  
+
+</script>
+
+</html>

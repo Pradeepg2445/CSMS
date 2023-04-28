@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/minty/bootstrap.min.css">
+<script type="text/javascript" src="scripts/BetterDropdown/jquery.betterdropdown.js"></script>
+<link rel="stylesheet" href="style/BetterDropdown/jquery.betterdropdown.css" type="text/css">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<title>
+    jQuery Better Dropdown Plugin Examples
+</title>
+<style>
+    body { background: #fafafa; }
+    </style>
+</head>
+<body><div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="https://www.jqueryscript.net/form/select-search-better-dropdown.html">Download This Plugin</a></li>
+<li><a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul><div id="carbon-block"></div><script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CK7DKKQU&placement=wwwjqueryscriptnet";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<div class="container main-page">
+    <div class="container section header-section">
+        <header>
+                <h1>
+                    jQuery Better Dropdown Plugin Examples
+                </h1>
+            </header>
+
+    </div>
+
+    <div class="arrows-container">
+        <div class="arrow-down"></div>
+    </div>
+
+
+    <div class="container section setup-section">
+        <h3>Basic Select</h3>
+        <hr>
+        <div class="select-containers row">
+            <div class="select-example-container col">
+                <p>Turn this</p>
+                <div class="select-example-container">
+                    <select id="select-example">
+                        <option value="">--choose a ship--</option>
+                        <option value="Anubis">Anubis</option>
+                        <option value="Canterbury">Canterbury</option>
+                        <option value="Donnager">Donnager</option>
+                        <option value="Knight">Knight</option>
+                        <option value="Nauvoo">Nauvoo</option>
+                        <option value="Rocinante">Rocinante</option>
+                        <option value="Scopuli">Scopuli</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="better-dropdown-example-container col">
+                <p>Into this</p>
+                <select id="better-dropdown-example">
+                    <option value="">--choose a ship--</option>
+                    <option value="Anubis">Anubis</option>
+                    <option value="Canterbury">Canterbury</option>
+                    <option value="Donnager">Donnager</option>
+                    <option value="Knight">Knight</option>
+                    <option value="Nauvoo">Nauvoo</option>
+                    <option value="Rocinante">Rocinante</option>
+                    <option value="Scopuli">Scopuli</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container section setup-section">
+        <h3>Display Secondary Text</h3>
+        <div class="select-containers row">
+            <div class="select-example-container col">
+                <p>Turn this</p>
+                <div class="select-example-container">
+                    <select id="select-example">
+                        <option value="">--choose a ship--</option>
+                        <option value="Anubis">Anubis</option>
+                        <option value="Canterbury">Canterbury</option>
+                        <option value="Donnager">Donnager</option>
+                        <option value="Knight">Knight</option>
+                        <option value="Nauvoo">Nauvoo</option>
+                        <option value="Rocinante">Rocinante</option>
+                        <option value="Scopuli">Scopuli</option>
+                    </select>
+                </div>
+            </div>
+            <div class="better-dropdown-example-container col">
+                <p>Into this</p>
+                <select id="better-dropdown-example-2">
+                    <option value="">--select a user--</option>
+                    <option data-display-below-text="sbell">Stringer Bell</option>
+                    <option data-display-below-text="tcarcetti">Tommy Carcetti</option>
+                    <option data-display-below-text="cdavis">Clay Davis</option>
+                    <option data-display-below-text="lfreamon">Lester Freamon</option>
+                    <option data-display-below-text="kgreggs">Kima Greggs</option>
+                    <option data-display-below-text="olittle">Omar Little</option>
+                    <option data-display-below-text="jmcnulty">Jimmy McNulty</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .section{
+        padding-top: 40px;
+    }
+
+    .code-container{
+        background-color: #EBECF0;
+    }
+
+    .outer-code-container{
+        /* padding-left: 20px;
+        padding-right: 67%; */
+    }
+
+    .main-page{
+        margin: 150px auto;
+        max-width: 600px;
+    }
+
+    .code-snippet{
+        padding-left: 8px;
+        padding-bottom: 2px;
+    }
+
+    /* .better-dropdown-example-container{
+        padding-top: 12px;
+    } */
+
+    .select-example-container{
+        padding-top: 4px;
+    }
+
+    #select-example{
+        width: 200px;
+    }
+
+    .select-example-container{
+        padding-top: 2px;
+    }
+
+    .code-snippet.option {
+        padding-left: 30px;
+    }
+
+    .code-snippet.select{
+        font-size: small;
+    }
+
+    .example-text{
+        padding-top: 15px;
+    }
+
+    .container.main-page {
+        padding-bottom: 300px;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        $('#better-dropdown-example').betterDropdown();
+
+        $('#better-dropdown-example-2').betterDropdown({displayTextBelow: true});
+
+        $('.btn-download').click(function(){
+            location.href = "jquery-better-dropdown.zip";
+        })
+    });
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

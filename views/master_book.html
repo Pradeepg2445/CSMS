@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Master Book - CSMS</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen'
+    href='../node_modules/datatables/media/css/jquery.dataTables.min.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href="css/base.css">
+</head>
+
+<body>
+  <div class="loading">
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+  </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-md-2" style="padding:0px;">
+        <div class="left-navebar">
+        </div>
+      </div>
+      <div class="col-md-10 " style="padding:8px">
+        <h3>Master Book
+          <div class="float-end">  
+            <button class="btn btn-success btn-sm" onclick="view('')"><i class="fa fa-plus" aria-hidden="true"></i>
+              Add</button>
+          </div>
+        </h3>
+        <hr>
+        <center>
+          <div style="width: 99%;">
+            <table id="masterBookData" class="cell-border hover">
+              <thead>
+                <tr>
+                  <th>Master ID</th>
+                  <th>Book Name</th>
+                  <th>Author</th>
+                  <th>Publication</th>
+                  <th>Total</th>
+                  <th>Available</th>
+                  <th>Price</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="showTableData">
+              </tbody>
+
+            </table>
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document" style="margin-top: 11%;margin-left: 35%;box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewTitle"></h5>
+          <button type="button" onclick="closeView()" style="background-color: transparent;border: none;color:red; font-weight: bold;font-size: 22px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> 
+        <div class="modal-body">
+
+          <div >
+            <label >Book Name&ensp;<span class="mandatory">* This field is
+                mandatory</span></label>
+            <input type="text" class="form-control" maxlength="100" id="bookName" placeholder="Book Name">
+          </div>
+          <div >
+            <label >Author Name&ensp;<span class="mandatory">* This field is
+                mandatory</span></label>
+            <input type="text" class="form-control" maxlength="50" id="author" placeholder="Author Name">
+          </div>
+          <div >
+            <label >Publication&ensp;</label>
+            <input type="text" class="form-control" maxlength="100" id="publication" placeholder="Publication">
+          </div>
+          <div >
+            <label >Price&ensp;</label>
+            <input type="text" class="form-control" maxlength="4" id="price" placeholder="Price" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
+          </div>
+        </div>
+        <div class="modal-footer">
+         </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</body>
+
+<script>
+  const { ipcRenderer } = require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"
+  onload="window.$=window.JQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/left_panel.js"></script>
+<script type="text/javascript">
+  require('../node_modules/datatables/media/js/jquery.dataTables.min.js')(window, $)
+</script>
+
+<script type="text/javascript">
+  $(document).ready(async function () {
+    $(".left-navebar").html(await loadLeftPanel())
+    await loadData();
+    $('#masterBookData').dataTable({
+      "pageLength": 20
+    });
+    $(".loading").fadeOut("slow");
+  })
+
+
+ 
+
+  async function loadData() { 
+
+    let data = await ipcRenderer.sendSync('book', { action: "masterBookView",data:"1"})
+    const rows = data.data;
+    let html = ``;
+    var className;
+    for (var i = 0; i < rows.length; i++) {
+      html += `
+      <tr> 
+      <td>`+ rows[i].MSTBK_ID + `</td>
+      <td>`+ rows[i].BOOK_NAME + `</td>
+      <td>`+ rows[i].AUTHOR + `</td>
+      <td>`+ rows[i].PUBLICATION + `</td>
+      <td>`+ rows[i].TOTAL + `</td>
+      <td>`+ rows[i].AVAIL + `</td>
+      <td>`+ rows[i].PRICE + `</td>
+      <td>
+      <button class="btn btn-primary btn-sm" onclick="view('`+ rows[i].MSTBK_ID + `')"><i class="fa fa-eye" aria-hidden="true"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteMasterBook('`+ rows[i].MSTBK_ID + `')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      </td>
+      </tr>\n`;
+    }
+    
+    if(rows.length==0) $("#showTableData").html("")
+    else $("#showTableData").html(html)
+  }
+
+  async function deleteMasterBook(mastbkId){
+    let a = await showConfirm("Alert!", "Do you really want to delete this master book record?")
+    if (parseInt(a.data) === 0) {
+    await ipcRenderer.sendSync('book', { action: "deleteMasterBook", mastbkId:mastbkId })
+    window.location.replace("master_book.html")
+
+    }
+  }
+
+async function view(mastbkId){
+  if(mastbkId===""){
+    $("#viewTitle").html("Add Master Book")
+    $(".modal-footer").html(`  <button type="button" class="btn btn-primary" onclick="saveMasterBook('add','')"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button> 
+       `)
+  } else{
+    $("#viewTitle").html("View Master Book")
+    $(".modal-footer").html(`  <button type="button" class="btn btn-primary" onclick="saveMasterBook('edit',`+mastbkId+`)"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button> 
+       `)
+
+  } 
+    let a = await ipcRenderer.sendSync('book', { action: "masterBookView",data:` MSTBK_ID='`+mastbkId+`'`})
+ $("#modal").fadeIn("fast");
+$("#bookName").val(a.data[0].BOOK_NAME);
+$("#author").val(a.data[0].AUTHOR);
+$("#publication").val(a.data[0].PUBLICATION);
+$("#price").val(a.data[0].PRICE);
+  }
+
+  function closeView(){
+ $("#modal").hide();
+$("#bookName").val("");
+$("#author").val("");
+$("#publication").val("");
+$("#price").val("");
+  }
+
+
+  async function saveMasterBook(type,mastbkId){
+let bookName=$("#bookName").val();
+let author=$("#author").val();
+let publication=$("#publication").val();
+let price=$("#price").val();
+if(isEmpty(bookName) || isEmpty(author) ){  
+  await showAlert("Alert!", "Kindly enter fill the mandatory fields.");
+  return;
+}let actions="";
+
+let b={
+    bookName:bookName,
+    author:author,
+    publication:publication || "-",
+    price:price||0,
+    type:type,
+    mastbkId:""
+   }
+
+if(type==="edit"){
+  b.mastbkId=mastbkId;
+  actions="updated";
+} else{
+  actions="added"
+}
+
+
+   let a= await ipcRenderer.sendSync('book', { action: "addMasterBook",data:b})
+
+    if(a.success){
+      await showAlert("Alert!","Successfully "+actions+"!" ) 
+      window.location.replace("master_book.html") 
+    }else{
+      await showAlert("Alert!","Something went wrong!" )  
+    }
+  }
+
+
+
+
+</script>
+
+</html>

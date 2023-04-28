@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+
+    <title>Login - CSMS</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="../node_modules/bootstrap/dist/css/bootstrap.min.css"> 
+    <link rel='stylesheet' type='text/css' media='screen' href='../node_modules/fontawesome-4.7/css/font-awesome.min.css'> 
+    <link rel='stylesheet' type='text/css' media='screen' href="css/base.css"> 
+    <style>        
+        .middle-form {
+        margin: 50px auto;
+        }
+        .middle-form form {
+        margin-bottom: 15px;
+        background: #f7f7f7;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        }
+        .form-group {
+        margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+  <div class="loading" >
+    <img class="loading-image" src="images/loader.gif" alt="Loading..." />
+</div>
+    <div class="jumbotron d-flex align-items-center min-vh-100 mainBody">
+        <div class="container text-center">
+          <div class="middle-form " style="width: 375px;">
+            <form>
+              <center>
+                <h2 style="margin-bottom:15px;">Log in</h2>
+              </center>
+              <spaan class="error" style=" color:red"> Email or password is incorrect!</spaan>
+              <div class="form-group">
+                 <input type="email" class="form-control" placeholder="Email" id="email" required="required"  maxlength="50"  onblur="isValidEmail(this)">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" id="password" required="required">
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" style="width: 100%;" onclick="login()">
+                  <i class="fa fa-sign-in" aria-hidden="true"></i>&ensp;Log in </button>
+              </div> 
+            </form>
+          </div>
+        </div>
+      </div>    
+
+</body>
+<script>
+  const {ipcRenderer}=require('electron')  
+</script>
+<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js" onload="window.$=window.JQuery=module.exports;"></script>
+<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="js/base.js"></script>
+<script  type="text/javascript"> 
+ $(document).ready(function(){   
+    $(".error").hide(); 
+    $(".loading").fadeOut("slow") 
+   // ipcRenderer.sendSync('user', {action:"logout"})
+    })
+
+async function login(){
+    let email=$("#email").val();
+    let password=$("#password").val();
+
+ if(isEmpty(email)){
+    $(".errMsg").html("email");
+    $(".error").show();
+    return;
+} else if(isEmpty(password)){
+    $(".errMsg").html("password");
+    $(".error").show();
+    return;
+} else{
+    $(".error").hide();    
+}
+
+$(".loading").show();
+let postData={
+  email:email,
+  password:password,
+  action:'login'
+}
+
+let data=await ipcRenderer.sendSync('user', postData) 
+if(data.success){
+  if(data.data){
+    window.location.replace("index.html")
+  }else{ 
+    
+    $(".loading").fadeIn();
+    
+ await showAlert("Alert!","Email or password not matched!" )  
+      window.location.replace("login.html")  
+   
+  }
+} else{
+    $(".loading").fadeOut("slow");
+    
+ 
+ 
+ await showAlert("Alert!","Something went wrong! "+data.message )  
+
+}
+
+}
+
+</script>
+</html>
