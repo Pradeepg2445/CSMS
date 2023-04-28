@@ -1,0 +1,24 @@
+{
+  "name": "CSMS",
+  "version": "1.0.0",
+  "description": "Combined Student Management System",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Pradeep G",
+  "license": "MIT",
+  "dependencies": {
+    "aes-encryption": "^1.0.4",
+    "bootstrap": "^5.2.3",
+    "datatables": "^1.10.18",
+    "fontawesome-4.7": "^4.7.0",
+    "jquery": "^3.6.3",
+    "ng-selectize": "^2.0.0",
+    "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "electron": "^23.0.0",
+    "electron-packager": "^17.1.1"
+  }
+}
